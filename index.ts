@@ -1,4 +1,15 @@
+const preferences = ["high", "low", "no-preference"];
+
 export default (fallbackToNone: Boolean = true) => {
+  if (typeof window !== "undefined" && typeof window.matchMedia === "function") {
+    const preference = preferences.find(value =>
+      window.matchMedia(`(prefers-contrast: ${value})`).matches
+    );
+
+    if (preference) return preference;
+    return fallbackToNone ? "no-preference" : "unknown";
+  }
+
   const testId = `test_${Math.random()
     .toString(36)
     .substring(2)}`;
